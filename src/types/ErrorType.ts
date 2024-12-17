@@ -1,3 +1,4 @@
+// Enum for defining the error type
 export enum ErrorType {
   NO_ERROR = '',
   LOAD_TODOS = 'Unable to load todos',

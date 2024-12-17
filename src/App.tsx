@@ -1,18 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+// General libs
+import React from 'react';
 import { useEffect, useState } from 'react';
-import { UserWarning } from './UserWarning';
-import { USER_ID } from './api/todos';
-import { Todo } from './types/Todo';
+import classNames from 'classnames';
+// components
 import { TodoList } from './components/TodoList/TodoList';
 import { TodoCreate } from './components/TodoCreate/TodoCreate';
 import { TodoFooter } from './components/TodoFooter/TodoFooter';
-import { getTodos } from './api/todos';
+import { UserWarning } from './UserWarning';
+// api
+import { USER_ID, getTodos } from './api/todos';
+// Types
+import { Todo } from './types/Todo';
 import { StatusFilter } from './types/StatusFilter';
 import { filterTodos } from './utils/filterTodos';
-import classNames from 'classnames';
 import { ErrorType } from './types/ErrorType';
-import React from 'react';
 
 export const App: React.FC = () => {
   const [todoList, setTodoList] = useState<Todo[]>([]);
@@ -33,6 +36,7 @@ export const App: React.FC = () => {
 
         const timer = setTimeout(() => {
           setErrorType(ErrorType.NO_ERROR);
+          // unmounts the timer, so it won't be duplicated
           clearTimeout(timer);
         }, 3000);
       }
@@ -41,8 +45,12 @@ export const App: React.FC = () => {
     getTodosFromServer();
   }, []);
 
+  // Filtering the list
   const filteredTodos = filterTodos(statusFilter, todoList);
+  // Count all active todos. (so we have to use the raw data from the server, not the filtered one)
   const countActiveTodos = todoList.filter(todo => !todo.completed).length;
+  // if the total amount of the todos is bigger than active ones, then there are completed todos
+  // otherwise there aren't any
   const hasCompletedTodos = todoList.length > countActiveTodos;
 
   if (!USER_ID) {
